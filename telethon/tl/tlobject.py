@@ -13,9 +13,11 @@ class TLObject:
         self.confirm_received = False
 
         # These should be overrode
-        self.constructor_id = 0
         self.content_related = False  # Only requests/functions/queries are
         self.responded = False
+
+    constructor_id = 0
+    subclass_of_id = 0
 
     # These should not be overrode
     def on_send_success(self):
