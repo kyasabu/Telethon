@@ -7,6 +7,7 @@ from threading import Lock
 from base64 import b64encode, b64decode
 from os.path import isfile as file_exists
 
+from .update_state import UpdateState
 from .. import helpers as utils
 
 
@@ -110,6 +111,10 @@ class JsonSession:
             self.system_lang_code = session.system_lang_code
             self.lang_pack = session.lang_pack
 
+            # Copy a reference on purpose- the updates state must be shared
+            # across different connections.
+            self.update_state = session.update_state
+
         else:  # str / None
             self.session_user_id = session_user_id
 
@@ -120,6 +125,7 @@ class JsonSession:
             self.lang_code = 'en'
             self.system_lang_code = self.lang_code
             self.lang_pack = ''
+            self.update_state = UpdateState()
 
         # Cross-thread safety
         self._lock = Lock()

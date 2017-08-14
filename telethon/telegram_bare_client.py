@@ -281,7 +281,15 @@ class TelegramBareClient:
 
         try:
             self._sender.send(request)
-            self._sender.receive(request, updates=updates)
+            u = []  # Save updates here to update the state
+            self._sender.receive(request, updates=u)
+            self.session.update_state.update_state(request.result)
+            if u:
+                for update in u:
+                    self.session.update_state.update_state(update)
+                if updates is not None:
+                    updates.extend(u)
+
             return request.result
 
         except ConnectionResetError:
